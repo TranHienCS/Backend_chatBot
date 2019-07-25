@@ -77,6 +77,13 @@ businessRoutes.route('/deleteSamples').delete(async (req,res)=>{
     res.json(data);
 })
 
+businessRoutes.route('/webhook', (req,res)=>{
+    if(req.query['hub.verify_token']==='12345678'){
+        res.send(req.query['hub.challenge']);
+    }
+    res.send('Error, wrong validation token');
+});
+
 // Defined edit route
 businessRoutes.route('/edit/:id').get(function (req, res) {
     let id = req.params.id;
