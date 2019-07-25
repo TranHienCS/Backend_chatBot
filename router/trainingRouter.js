@@ -84,7 +84,7 @@ businessRoutes.route('/webhook').get( (req,res)=>{
     res.send('Error, wrong validation token');
 });
 
-chatRoutes.route('/webhook').post(async function(req, res) {
+businessRoutes.route('/webhook').post(async function(req, res) {
     var entries = req.body.entry;
     for (var entry of entries) {
       var messaging = entry.messaging;
