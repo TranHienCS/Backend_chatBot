@@ -77,13 +77,51 @@ businessRoutes.route('/deleteSamples').delete(async (req,res)=>{
     res.json(data);
 })
 
-businessRoutes.route('/webhook', (req,res)=>{
+businessRoutes.route('/webhook').get( (req,res)=>{
     if(req.query['hub.verify_token']==='12345678'){
         res.send(req.query['hub.challenge']);
     }
     res.send('Error, wrong validation token');
 });
 
+chatRoutes.route('/webhook').post(async function(req, res) {
+    var entries = req.body.entry;
+    for (var entry of entries) {
+      var messaging = entry.messaging;
+      for (var message of messaging) {
+        var senderId = message.sender.id;
+        if (message.message) {
+          // If user send text
+          if (message.message.text) {
+            var text = message.message.text;
+  
+            let tempres = await controller.reciveToReply(text);
+            sendMessage(senderId, tempres);
+          }
+        }
+      }
+    }
+  
+    res.status(200).send("OK");
+  });
+  
+  function sendMessage(senderId, message) {
+    request({
+      url: 'https://graph.facebook.com/v2.6/me/messages',
+      qs: {
+        access_token: process.env.FB_TOKEN , //"EAAGvgiCMDAsBAII22Ub9d6fZC16GmKZApCxy3Y6UhN3iDrcEFo6atMrXtSvqUPtnGzcJ4Ai5UsHIH5gduJjAJrVTEjlUOmOsjevSpRbu5dXilNrVuZBkelnXzW5uVfmCtqQTjrTc5iMTBejnE727UiPXL2EceZCxPRwTpAi8Bk1SCbetIaSD4qihRwysMBUZD",
+      },
+      method: 'POST',
+      json: {
+        recipient: {
+          id: senderId
+        },
+        message: {
+          text: message
+        },
+      }
+    });
+  }
 // Defined edit route
 businessRoutes.route('/edit/:id').get(function (req, res) {
     let id = req.params.id;
