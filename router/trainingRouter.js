@@ -3,9 +3,15 @@ const businessRoutes = express.Router();
 const controller = require('../method/controller')
 const Business = require('../model/trainingModel');
 const request = require('request');
-
+//relastic Search
+// const { Client } = require('@elastic/elasticsearch')
+// const client = new Client({ node: 'http://localhost:9200' })
 // Require Business model in our routes module
 // Defined store route
+// businessRoutes.route('/test').post((req,res)=>{
+
+// })
+
 businessRoutes.route('/add').post(async function (req, res) {
     let reqData = new Business(req.body);
     let isSuccess = await controller.trainingBot(reqData);

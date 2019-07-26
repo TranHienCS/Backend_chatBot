@@ -18,7 +18,8 @@ module.exports={
     },
 
     async queryEntity(id){
-        let regex = new RegExp(id);
+        let regex = new RegExp(('$'+id)+'|'+(id+','));
+        console.log(regex);
         return await Business.find({"params":{$regex: regex , $options: 'i'}},(err,docs)=>docs);
     }
 }

@@ -42,6 +42,21 @@ module.exports = {
       let key = Object.keys(dataReq.entities)[i];
       let entity = key;
       let value = dataReq.entities[key];
+      console.log(value);
+      let arrVal=[];
+      if(value.split(',').length>1){
+        arrVal = value.split(',');
+        for(let i =0;i<arrVal.length;i++){
+          let finalEntity ={};
+          let startIdx = dataReq.question.indexOf(arrVal[i]);
+          finalEntity.value = arrVal[i];
+          finalEntity.start = startIdx;
+          finalEntity.end = arrVal[i].length + startIdx;
+          finalEntity.entity = entity;
+          dataRes.entities.push(finalEntity);
+        }
+      }
+      else{
       let finalEntity = {};
       let startIdx = dataReq.question.indexOf(value);
       //let endIdx = startIdx + value.length;
@@ -50,9 +65,11 @@ module.exports = {
       finalEntity.end = value.length + startIdx;
       finalEntity.entity = entity;
       dataRes.entities.push(finalEntity);
+      }
     }
     //dataRes = [dataRes];
     //console.log(JSON.stringify(dataRes));
+    console.log(dataRes);
     return dataRes;
   },
 
